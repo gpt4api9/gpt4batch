@@ -42,3 +42,23 @@ func Test_client_Upload(t *testing.T) {
 	assert.NoError(t, err)
 	t.Log(resp)
 }
+
+func Test_client_Chat(t *testing.T) {
+	cc := NewClient()
+
+	resp, err := cc.Chat(context.Background(), &gpt4batch.ChatRequest{
+		Source: &gpt4batch.Source{
+			ID:          uuid.New().String(),
+			URL:         "https://beta.gpt4api.plus/standard/all-tools",
+			Name:        "upload-test",
+			AccessToken: "v2.local.VbhT_pdpjICiOqmEHJkEtC__5CVY9BmjsrV2ORiYPTDysqINzv2IyJW5fLaeNIn_uXQoq_5zfmSFSbpasAaJQm6vx8IjMdGgxjiF3QKc24T2os_3rUXRiw-LvJ8G2eiPeNtOJ6RquMrLEgZuEwLoaaN0t2RkyYEMH6bVSXYvIzSyY3gvw1FIUWpYZDwu9edVH6IMcit0HHVZ3LoPfZp8r82g5KlOBoSnHKhbCOZsY1MrqianvsCi3v8nNFjxdAb9110vPn4og-qtwZqQHTU3ldqZ7170sq4Vb4OhosX5iTCaPQ89uzh7SR97oDOtEu3oBXMW3APAsWXKXQ.bnVsbA",
+		},
+		Model:   "gpt-4",
+		Message: "你是gpt3还是gpt4?",
+	})
+
+	assert.NoError(t, err)
+	t.Log(resp)
+
+	// 我是基于 GPT-4 架构的人工智能模型。
+}
