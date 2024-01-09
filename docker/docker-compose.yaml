@@ -1,0 +1,28 @@
+version: '3'
+services:
+  nsqlookupd:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+  nsqd:
+    image: nsqio/nsq
+    restart: always
+    volumes:
+      - ./nsq/data:/data
+    command:  /nsqd -data-path=/data --broadcast-address=127.0.0.1 --lookupd-tcp-address=nsqlookupd:4160
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4151:4151"
+      - "4150:4150"
+  nsqadmin:
+    image: nsqio/nsq
+    restart: always
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4171:4171"
