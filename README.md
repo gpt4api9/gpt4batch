@@ -46,9 +46,3 @@
 - Gizmo
   - https://beta.gpt4api.plus/concurrent/gizmos
 
-# 版本
-
-- v1.0.0: [20231226]
-  - 添加多模态文件上传，对话调用，文件下载。
-  - 增加nsq本地存储会话。
-  - 支持GPTs市场接口服务调用。
