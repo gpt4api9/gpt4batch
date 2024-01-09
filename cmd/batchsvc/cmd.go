@@ -63,7 +63,7 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 				ins = make(gpt4batch.Ins, 0)
 				// cc is the client.
 				cc = client.NewClientDownloader(option.EnableDownload, client.NewClientLogger(logger, client.NewClient()))
-				//cc = client.NewClientLogger(logg, client.NewNoop())
+				// todo NewNoop only use to test.
 				//cc = client.NewNoop()
 			)
 
