@@ -28,10 +28,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/panjf2000/ants/v2"
-
 	"github.com/asaskevich/govalidator"
-	"github.com/schollz/progressbar/v3"
 	"gitlab.com/gpt4batch"
 	"gitlab.com/gpt4batch/log"
 )
@@ -247,6 +244,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 					},
 					ConversationId: tmpConversationID,
 					UploadPath:     image,
+					UploadType:     gpt4batch.Multimodal,
 				})
 				if err != nil {
 					logger.
@@ -283,6 +281,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 					},
 					ConversationId: tmpConversationID,
 					UploadPath:     file,
+					UploadType:     gpt4batch.MyFiles,
 				})
 				if err != nil {
 					logger.

@@ -21,13 +21,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/go-resty/resty/v2"
 	"gitlab.com/gpt4batch"
 )
 
@@ -49,8 +49,9 @@ func (c *client) Upload(ctx context.Context, req *gpt4batch.UploadRequest) (*gpt
 		SetHeader("Content-Type", "multipart/form-data").
 		SetFormData(map[string]string{
 			"conversation_id": req.ConversationId,
+			"type":            req.UploadType,
 		}).
-		SetFileReader("files", filepath.Base(req.UploadPath), bytes.NewReader(fileBytes)).
+		SetFileReader("file", filepath.Base(req.UploadPath), bytes.NewReader(fileBytes)).
 		Post(req.UploadURL)
 
 	if err != nil {

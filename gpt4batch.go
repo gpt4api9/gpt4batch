@@ -21,6 +21,13 @@ import (
 	"io"
 )
 
+const (
+	// MyFiles is the files' status. [my_files] replace ace_upload
+	MyFiles = "my_files"
+	// Multimodal is the multimodal status. [multimodal]
+	Multimodal = "multimodal"
+)
+
 // Logger represents an abstracted structured logging implementation. It
 // provides methods to trigger log messages at various alert levels and a
 // WithField method to set keys for a structured log message.
@@ -63,6 +70,8 @@ type UploadRequest struct {
 	UploadPath string `json:"upload_path"`
 	// ConversationId is the conversation id.if you need to associate previous conversations, please fill in the conversation id.
 	ConversationId string `json:"conversation_id,omitempty"`
+	// UploadType is the upload type. [file, image]
+	UploadType string `json:"upload_type,omitempty"`
 }
 
 // ChatResponse is the response for chatting.
