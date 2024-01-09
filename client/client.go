@@ -42,7 +42,7 @@ func (c *client) Upload(ctx context.Context, req *gpt4batch.UploadRequest) (*gpt
 	}
 
 	resp, err := resty.New().
-		SetTimeout(5*time.Second).
+		SetTimeout(8*time.Second).
 		R().
 		EnableTrace().
 		SetAuthToken(req.AccessToken).
