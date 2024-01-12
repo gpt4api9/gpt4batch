@@ -24,7 +24,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"sync"
 	"syscall"
 	"time"
 
@@ -58,8 +57,6 @@ type service struct {
 	doneChan <-chan struct{}
 	// pool is the service pool.
 	pool *ants.Pool
-	// lock is the service lock.
-	lock sync.RWMutex
 }
 
 // NewService returns a new gpt4batch.Service.
@@ -110,83 +107,40 @@ func (s *service) Open(ctx context.Context) error {
 }
 
 func (s *service) doWork(ctx context.Context) {
-	// wg is the service wait group.
-	// if the wg is null, return an error.
-	ticker := time.NewTicker(1 * time.Second)
-	defer ticker.Stop()
 
-	// index is the index.
-	var (
-		index = 0
-		reset = false
-	)
+	// items
+	for _, item := range s.items {
+		if s.config.Fix && item.IErr == nil {
+			s.stats.IncrSuccessCount()
+			s.updateProgressBar(ctx)
+			// quickly skip fields that have already succeeded.
+			continue
+		}
 
-	for {
-		select {
-		case <-ctx.Done():
-			s.logger.
-				WithField("event", "doWork").
-				Info("Done")
-			return
-		case <-ticker.C:
-			s.lock.Lock()
-			currentIndex := index
-
-			// current index > len(s.items), do nothing.
-			if currentIndex >= len(s.items) {
-				s.lock.Unlock()
-				return
-			}
-
-			index++
-			s.lock.Unlock()
-
-			s.lock.RLock()
-			item := s.items[currentIndex]
-			s.lock.RUnlock()
-
-			if s.config.Fix && item.IErr == nil {
-				s.stats.IncrSuccessCount()
+		// if the item is not null, do the work.
+		if err := s.pool.Submit(func() {
+			if err := s.Chat(ctx, item); err != nil {
+				s.stats.IncrFailedCount()
 				s.updateProgressBar(ctx)
-				// quickly skip fields that have already succeeded.
-				if !reset {
-					reset = true
-					ticker.Reset(1)
-				}
-				continue
-			}
-
-			// reset timer ticker.
-			if reset {
-				reset = false
-				ticker.Reset(1 * time.Second)
-			}
-
-			// if the item is not null, do the work.
-			if err := s.pool.Submit(func() {
-				if err := s.Chat(ctx, item); err != nil {
-					s.stats.IncrFailedCount()
-					s.updateProgressBar(ctx)
-					item.IErr = &gpt4batch.IErr{
-						Code:    http.StatusNotImplemented,
-						Message: err.Error(),
-					}
-				} else {
-					s.stats.IncrSuccessCount()
-					s.updateProgressBar(ctx)
-				}
-			}); err != nil {
-				s.logger.
-					WithField("event", "submit").
-					Error(err)
 				item.IErr = &gpt4batch.IErr{
 					Code:    http.StatusNotImplemented,
 					Message: err.Error(),
 				}
+			} else {
 				s.stats.IncrSuccessCount()
 				s.updateProgressBar(ctx)
-				continue
 			}
+		}); err != nil {
+			s.logger.
+				WithField("event", "submit").
+				Error(err)
+			item.IErr = &gpt4batch.IErr{
+				Code:    http.StatusNotImplemented,
+				Message: err.Error(),
+			}
+			s.stats.IncrSuccessCount()
+			s.updateProgressBar(ctx)
+			continue
 		}
 	}
 }
