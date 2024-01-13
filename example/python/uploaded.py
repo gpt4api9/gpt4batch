@@ -14,18 +14,42 @@
 
 
 import requests
+import json
+import os
 
-url = "https://beta.gpt4api.plus/standard/chat/uploaded"
+filename = "./example.txt"
 
-payload = {'type': 'my_files',
-'conversation_id': ''}
-files=[
-  ('file',('1.txt',open('1.txt','rb'),'text/plain'))
-]
+# Ensure the file exists
+if not os.path.exists(filename):
+    raise Exception(f"File not found: {filename}")
+
+# Read the file
+with open(filename, 'rb') as file:
+    file_bytes = file.read()
+
+# URL to send the POST request
+url = "https://beta.gpt4api.plus/standard/uploaded"
+
+# Prepare the headers and data for the POST request
 headers = {
-  'Authorization': 'Bearer <YOUR-ACCESS_TOKEN>'
+    "Authorization": "Bearer <YOUR_ACCESS_TOKEN>",
+    "Content-Type": "multipart/form-data"
+}
+data = {
+    "conversation_id": "",
+    "type": "my_files"
+}
+files = {
+    "file": (os.path.basename(filename), file_bytes)
 }
 
-response = requests.request("POST", url, headers=headers, data=payload, files=files)
+# Make the POST request
+response = requests.post(url, headers=headers, data=data, files=files, timeout=8)
 
-print(response.text)
+# Check for successful status code
+if response.status_code != 200:
+    raise Exception(f"Request failed with status: {response.status_code}, {response.reason}")
+
+# Parse the response
+result = response.json()
+print("<Upload>:", result)
