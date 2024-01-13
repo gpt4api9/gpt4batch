@@ -11,3 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
+import requests
+
+url = "https://beta.gpt4api.plus/standard/chat/uploaded"
+
+payload = {'type': 'my_files',
+'conversation_id': ''}
+files=[
+  ('file',('1.txt',open('1.txt','rb'),'text/plain'))
+]
+headers = {
+  'Authorization': 'Bearer <YOUR-ACCESS_TOKEN>'
+}
+
+response = requests.request("POST", url, headers=headers, data=payload, files=files)
+
+print(response.text)
