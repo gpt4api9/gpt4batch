@@ -19,7 +19,7 @@ import json
 # Define the request data
 req_data = {
     "message": "你是gpt3还是gpt-4",
-    "model": "gpt-4",
+    "model": "gpt-4-gizmo",
     "gizmo_id": "g-HMNcP6w7d"
 }
 
