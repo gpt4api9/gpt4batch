@@ -177,8 +177,9 @@ type Attachment struct {
 
 // UploadResponse is the response for uploading a file.
 type UploadResponse struct {
-	Attachment *Attachment `json:"attachment,omitempty"`
-	Part       *Part       `json:"part"`
+	ConversationId string      `json:"conversation_id"`
+	Attachment     *Attachment `json:"attachment,omitempty"`
+	Part           *Part       `json:"part"`
 }
 
 // DownloadRequest is the request for downloading a file.

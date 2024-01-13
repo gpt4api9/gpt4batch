@@ -30,7 +30,6 @@ import (
 	"github.com/panjf2000/ants/v2"
 	"github.com/schollz/progressbar/v3"
 
-	"github.com/asaskevich/govalidator"
 	"gitlab.com/gpt4batch"
 	"gitlab.com/gpt4batch/log"
 )
@@ -179,7 +178,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 
 		// conversationID is the conversation id. if the conversation id is not null, use the conversation id.
 		// if the conversation id is null, use the temporary conversation id.
-		if !govalidator.IsNull(conversationID) {
+		if conversationID != "" {
 			tmpConversationID = conversationID
 		}
 
@@ -218,6 +217,8 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 					Width:        resp.Part.Width,
 					Height:       resp.Part.Height,
 				})
+
+				tmpConversationID = resp.ConversationId
 			}
 		}
 
@@ -258,6 +259,8 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 					Width:         resp.Attachment.Width,
 					Height:        resp.Attachment.Height,
 				})
+
+				tmpConversationID = resp.ConversationId
 			}
 		}
 
