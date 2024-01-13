@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="910d8627-4b39-4461-8111-0f7bad2fcfbd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/batchsvc/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/go/chat/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/go/chat/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/go/gpts/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/example/go/gpts/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/example/go/chatandupload/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gpt4batch.go" beforeDir="false" afterPath="$PROJECT_DIR$/gpt4batch.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

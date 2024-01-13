@@ -151,7 +151,7 @@ type ChatMessage struct {
 }
 
 // Parts is the parts for chat service.
-type Parts []Part
+type Parts []*Part
 
 // Part is the part for chat service.
 type Part struct {
@@ -162,7 +162,7 @@ type Part struct {
 }
 
 // Attachments is the attachments for chat service.
-type Attachments []Attachment
+type Attachments []*Attachment
 
 // Attachment is the attachment for chat service.
 type Attachment struct {
