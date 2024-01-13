@@ -212,7 +212,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 
 				// parts is the parts. if the parts is not null, append the parts.
 				// if the parts is null, do nothing.
-				parts = append(parts, gpt4batch.Part{
+				parts = append(parts, &gpt4batch.Part{
 					AssetPointer: resp.Part.AssetPointer,
 					SizeBytes:    resp.Part.SizeBytes,
 					Width:        resp.Part.Width,
@@ -249,7 +249,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 
 				// parts is the parts. if the parts is not null, append the parts.
 				// if the parts is null, do nothing.
-				attachments = append(attachments, gpt4batch.Attachment{
+				attachments = append(attachments, &gpt4batch.Attachment{
 					Id:            resp.Attachment.Id,
 					Name:          resp.Attachment.Name,
 					Size:          resp.Attachment.Size,
