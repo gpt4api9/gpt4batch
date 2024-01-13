@@ -77,7 +77,7 @@ func (c *client) Chat(ctx context.Context, req *gpt4batch.ChatRequest) (*gpt4bat
 		EnableTrace().
 		SetAuthToken(req.AccessToken).
 		SetHeader("Content-Type", "application/json").
-		SetBody(req).
+		SetBody(req.Openai()).
 		Post(req.URL)
 	if err != nil {
 		return nil, err

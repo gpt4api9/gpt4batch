@@ -100,13 +100,43 @@ type SpecDownload struct {
 // ChatRequest is the request for chatting.
 type ChatRequest struct {
 	*Source                    `json:",inline"`
-	GizmoId                    string `json:"gizmo_id"`                    // GizmoId gizmo_id is the gizmo id.
-	Message                    string `json:"message"`                     // Messages: use in web (example: user , bot)
-	ParentMessageID            string `json:"parent_message_id,omitempty"` // ParentMessageID: use in web (example: 1234567890)
-	ConversationID             string `json:"conversation_id,omitempty"`   // ConversationID: use in web (example: 1234567890)
-	Stream                     bool   `json:"stream,omitempty"`            // Stream: use in web (example: true , false)
-	Model                      string `json:"model"`                       // Model: use in web (example: gpt3 ,gpt4 )
-	HistoryAndTrainingDisabled bool   `json:"history_and_training_disabled,omitempty"`
+	GizmoId                    string      `json:"gizmo_id"`                    // GizmoId gizmo_id is the gizmo id.
+	Message                    string      `json:"message"`                     // Messages: use in web (example: user , bot)
+	ParentMessageID            string      `json:"parent_message_id,omitempty"` // ParentMessageID: use in web (example: 1234567890)
+	ConversationID             string      `json:"conversation_id,omitempty"`   // ConversationID: use in web (example: 1234567890)
+	Stream                     bool        `json:"stream,omitempty"`            // Stream: use in web (example: true , false)
+	Model                      string      `json:"model"`                       // Model: use in web (example: gpt3 ,gpt4 )
+	Attachments                Attachments `json:"attachments,omitempty"`
+	Parts                      Parts       `json:"parts,omitempty"`
+	HistoryAndTrainingDisabled bool        `json:"history_and_training_disabled,omitempty"`
+}
+
+// Openai is the openai chat request.
+func (c ChatRequest) Openai() *OpenaiChatRequest {
+	return &OpenaiChatRequest{
+		GizmoId:                    c.GizmoId,
+		Message:                    c.Message,
+		ParentMessageID:            c.ParentMessageID,
+		ConversationID:             c.ConversationID,
+		Stream:                     c.Stream,
+		Model:                      c.Model,
+		Attachments:                c.Attachments,
+		Parts:                      c.Parts,
+		HistoryAndTrainingDisabled: c.HistoryAndTrainingDisabled,
+	}
+}
+
+// OpenaiChatRequest is the openai request.
+type OpenaiChatRequest struct {
+	GizmoId                    string      `json:"gizmo_id"`                    // GizmoId gizmo_id is the gizmo id.
+	Message                    string      `json:"message"`                     // Messages: use in web (example: user , bot)
+	ParentMessageID            string      `json:"parent_message_id,omitempty"` // ParentMessageID: use in web (example: 1234567890)
+	ConversationID             string      `json:"conversation_id,omitempty"`   // ConversationID: use in web (example: 1234567890)
+	Stream                     bool        `json:"stream,omitempty"`            // Stream: use in web (example: true , false)
+	Model                      string      `json:"model"`                       // Model: use in web (example: gpt3 ,gpt4 )
+	Attachments                Attachments `json:"attachments,omitempty"`
+	Parts                      Parts       `json:"parts,omitempty"`
+	HistoryAndTrainingDisabled bool        `json:"history_and_training_disabled,omitempty"`
 }
 
 // ChatMessages is the messages for chat service.

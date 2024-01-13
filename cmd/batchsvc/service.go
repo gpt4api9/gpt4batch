@@ -279,6 +279,8 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 			ConversationID:             tmpConversationID,
 			Stream:                     false,
 			Model:                      s.config.Model,
+			Attachments:                attachments,
+			Parts:                      parts,
 			HistoryAndTrainingDisabled: s.config.HistoryAndTrainingDisabled,
 		})
 		if err != nil {

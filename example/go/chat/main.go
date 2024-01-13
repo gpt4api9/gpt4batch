@@ -16,6 +16,42 @@ limitations under the License.
 
 package main
 
-func main() {
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/go-resty/resty/v2"
+	"gitlab.com/gpt4batch"
+	"net/http"
+	"time"
+)
 
+func main() {
+	req := gpt4batch.OpenaiChatRequest{
+		Message: "你是gpt3还是gpt-4",
+		Model:   "gpt-4",
+	}
+
+	// 建议对话设置8分钟
+	resp, err := resty.New().
+		SetTimeout(8*time.Minute).
+		R().
+		EnableTrace().
+		SetAuthToken("<YOUR_ACCESS_TOKEN>").
+		SetHeader("Content-Type", "application/json").
+		SetBody(req).
+		Post("https://beta.gpt4api.plus/standard/all-tools")
+	if err != nil {
+		panic(err)
+	}
+
+	if resp.StatusCode() != http.StatusOK {
+		panic(fmt.Sprintf(""))
+	}
+
+	var result gpt4batch.ChatResponse
+	if err := json.Unmarshal(resp.Body(), &result); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("<ChatResponse>: ", result)
 }
