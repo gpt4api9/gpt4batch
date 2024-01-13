@@ -46,9 +46,9 @@ func main() {
 // NewCommand creates a new root command for gpt4batch.
 func NewCommand() *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:   "batchsvc",
+		Use:   "gpt4batch",
 		Args:  cobra.NoArgs,
-		Short: "Command line tool to gpt4api batch serve.<https://gpt4api.shop>",
+		Short: "Command line tool to gpt4api gpt4batch serve.<https://gpt4api.shop>",
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.PrintErrf("See '%s -h' for help\n", cmd.CommandPath())
 		},
