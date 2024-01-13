@@ -27,7 +27,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/panjf2000/ants/v2"
 	"github.com/schollz/progressbar/v3"
 
 	"gitlab.com/gpt4batch"
@@ -54,8 +53,8 @@ type service struct {
 	cancel func()
 	// doneChan is the service done channel.
 	doneChan <-chan struct{}
-	// pool is the service pool.
-	pool *ants.Pool
+	// wg is the limit go size wg.
+	wg SizedWaitGroup
 }
 
 // NewService returns a new gpt4batch.Service.
@@ -68,17 +67,8 @@ func NewService(config Option, cc gpt4batch.Client, items gpt4batch.Ins, stats *
 		items:       items,
 		rdbInterval: time.Duration(config.RDBInterval) * time.Minute,
 		progressBar: progressbar.Default(int64(len(items))),
+		wg:          New(config.Goroutine),
 	}
-
-	// pool is the service pool.
-	// if the pool is null, return an error.
-	pool, err := ants.NewPool(config.Goroutine)
-	if err != nil {
-		panic(err)
-	}
-
-	// pool is the service pool.
-	svc.pool = pool
 	return svc
 }
 
@@ -106,8 +96,6 @@ func (s *service) Open(ctx context.Context) error {
 }
 
 func (s *service) doWork(ctx context.Context) {
-
-	// items
 	for _, item := range s.items {
 		if s.config.Fix && item.IErr == nil {
 			s.stats.IncrSuccessCount()
@@ -116,31 +104,22 @@ func (s *service) doWork(ctx context.Context) {
 			continue
 		}
 
-		// if the item is not null, do the work.
-		if err := s.pool.Submit(func() {
+		s.wg.Add()
+		go func(item *gpt4batch.In) {
+			defer func() {
+				s.updateProgressBar(ctx)
+				s.wg.Done()
+			}()
 			if err := s.Chat(ctx, item); err != nil {
 				s.stats.IncrFailedCount()
-				s.updateProgressBar(ctx)
 				item.IErr = &gpt4batch.IErr{
 					Code:    http.StatusNotImplemented,
 					Message: err.Error(),
 				}
 			} else {
 				s.stats.IncrSuccessCount()
-				s.updateProgressBar(ctx)
 			}
-		}); err != nil {
-			s.logger.
-				WithField("event", "submit").
-				Error(err)
-			item.IErr = &gpt4batch.IErr{
-				Code:    http.StatusNotImplemented,
-				Message: err.Error(),
-			}
-			s.stats.IncrSuccessCount()
-			s.updateProgressBar(ctx)
-			continue
-		}
+		}(item)
 	}
 }
 
@@ -443,9 +422,6 @@ func (s *service) write(ctx context.Context, filename string) error {
 // Close closes the service.
 func (s *service) Close(ctx context.Context) error {
 	s.logger.Info("Close")
-
-	// release the pool.
-	s.pool.Release()
 
 	// if the cancel is not null, cancel the service.
 	if s.cc != nil {

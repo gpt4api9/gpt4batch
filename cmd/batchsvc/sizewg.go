@@ -17,6 +17,15 @@ limitations under the License.
 // SizedWaitGroup has the same role and close to the
 // same API as the Golang sync.WaitGroup but adds a limit of
 // the amount of goroutines started concurrently.
+
+package batchsvc
+
+import (
+	"context"
+	"math"
+	"sync"
+)
+
 type SizedWaitGroup struct {
 	Size int
 
