@@ -100,7 +100,6 @@ func (s *service) doWork(ctx context.Context) {
 		if s.config.Fix && item.IErr == nil {
 			s.stats.IncrSuccessCount()
 			s.updateProgressBar(ctx)
-			// quickly skip fields that have already succeeded.
 			continue
 		}
 
@@ -422,6 +421,8 @@ func (s *service) write(ctx context.Context, filename string) error {
 // Close closes the service.
 func (s *service) Close(ctx context.Context) error {
 	s.logger.Info("Close")
+
+	s.wg.Wait()
 
 	// if the cancel is not null, cancel the service.
 	if s.cc != nil {

@@ -67,12 +67,13 @@ func (c clientLogger) Chat(ctx context.Context, req *gpt4batch.ChatRequest) (res
 	defer func(start time.Time) {
 		if err != nil {
 			logg.
-				WithField("end_turn", resp.EndTurn).
-				WithField("download", len(resp.Downloads)).
 				WithField("took", time.Since(start)).
 				Error(fmt.Sprintf("Failed to chat: %s", err))
+			return
 		}
 		logg.
+			WithField("end_turn", resp.EndTurn).
+			WithField("download", len(resp.Downloads)).
 			WithField("took", time.Since(start)).
 			Info("Chat")
 	}(time.Now())
