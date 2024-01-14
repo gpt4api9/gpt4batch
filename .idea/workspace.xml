@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="910d8627-4b39-4461-8111-0f7bad2fcfbd" name="Changes" comment="feat: 添加打包脚本">
+      <change beforePath="$PROJECT_DIR$/cmd/batchsvc/cmd.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/cmd.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/batchsvc/option.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/option.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/batchsvc/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/out.jsonl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,5 +147,16 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/client/client_logger.go</url>
+          <line>68</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

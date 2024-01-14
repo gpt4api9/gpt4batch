@@ -79,7 +79,7 @@ type Option struct {
 	RDBInterval int
 }
 
-func (o Option) Validate() error {
+func (o *Option) Validate() error {
 	if govalidator.IsNull(o.URL) {
 		return errors.New("URL is required")
 	}

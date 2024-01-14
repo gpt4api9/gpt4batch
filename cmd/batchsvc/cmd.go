@@ -124,7 +124,7 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 			}
 
 			// create a new service. the service is used to send the gpt4api batch to the server.
-			svc := NewService(option, cc, ins, &Stats{
+			svc := NewService(&option, cc, ins, &Stats{
 				BatchTotal:    batchTotal,
 				CompleteTotal: 0,
 				SuccessTotal:  0,

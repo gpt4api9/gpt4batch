@@ -40,7 +40,7 @@ type service struct {
 	// stats is the service stats.
 	stats *Stats
 	// config is the service config.
-	config Option
+	config *Option
 	// client is the service client.
 	cc gpt4batch.Client
 	// items is the service items.
@@ -58,7 +58,7 @@ type service struct {
 }
 
 // NewService returns a new gpt4batch.Service.
-func NewService(config Option, cc gpt4batch.Client, items gpt4batch.Ins, stats *Stats) gpt4batch.Service {
+func NewService(config *Option, cc gpt4batch.Client, items gpt4batch.Ins, stats *Stats) gpt4batch.Service {
 	svc := &service{
 		logger:      log.New(log.InfoLevel),
 		config:      config,
@@ -421,8 +421,6 @@ func (s *service) write(ctx context.Context, filename string) error {
 // Close closes the service.
 func (s *service) Close(ctx context.Context) error {
 	s.logger.Info("Close")
-
-	s.wg.Wait()
 
 	// if the cancel is not null, cancel the service.
 	if s.cc != nil {

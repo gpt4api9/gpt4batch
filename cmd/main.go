@@ -18,12 +18,13 @@ package main
 
 import (
 	"context"
-	"github.com/spf13/cobra"
-	"gitlab.com/gpt4batch/cmd/authsvc"
-	"gitlab.com/gpt4batch/cmd/batchsvc"
 	"math/rand"
 	"os"
 	"time"
+
+	"github.com/spf13/cobra"
+	"gitlab.com/gpt4batch/cmd/authsvc"
+	"gitlab.com/gpt4batch/cmd/batchsvc"
 )
 
 func main() {
