@@ -11,4 +11,4 @@ willRelease:
 
 release:
 	@goreleaser check
-	@goreleaser release --snapshot --rm-dist
+	@goreleaser release --rm-dist
