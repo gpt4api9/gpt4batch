@@ -30,10 +30,10 @@ func main() {
 			ID: fmt.Sprintf("id: %d", i),
 		}
 
-		for j := 0; j < 4; j++ {
+		for j := 0; j < 1; j++ {
 			in.Asks = append(in.Asks, &gpt4batch.Ask{
 				ID:      fmt.Sprintf("pid: %d", j),
-				Content: fmt.Sprintf("id-%d-pid-%d", i, j),
+				Content: "你是gpt3还是gpt-4",
 			})
 		}
 

@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="910d8627-4b39-4461-8111-0f7bad2fcfbd" name="Changes" comment="feat: 添加打包脚本">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/batchsvc/cmd.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/cmd.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/batchsvc/option.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/option.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/batchsvc/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/batchsvc/service.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.jsonl" beforeDir="false" afterPath="$PROJECT_DIR$/out.jsonl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/general/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/test/general/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +44,7 @@
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "DefaultGoTemplateProperty": "Go Application",
     "Go Build.go build gitlab.com/gpt4batch/cmd.executor": "Debug",
+    "Go Build.go build gitlab.com/gpt4batch/test/general.executor": "Debug",
     "Go Test.Test_client_Chat in gitlab.com/gpt4batch/client.executor": "Debug",
     "Go Test.Test_client_Upload in gitlab.com/gpt4batch/client.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -64,6 +66,7 @@
       <recent name="$PROJECT_DIR$/example/go/upload/image" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test/example" />
       <recent name="$PROJECT_DIR$/example/go/upload/files" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cmd/batchsvc" />
@@ -74,11 +77,20 @@
     <configuration name="go build gitlab.com/gpt4batch/cmd" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="gpt4batch" />
       <working_directory value="$PROJECT_DIR$" />
-      <parameters value="batchsvc -i $PROJECT_DIR$/test/example/example.jsonl -m gpt-4" />
+      <parameters value="batchsvc -i $PROJECT_DIR$/test/example/example_2.jsonl -m gpt-4" />
       <kind value="PACKAGE" />
       <package value="gitlab.com/gpt4batch/cmd" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/cmd/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build gitlab.com/gpt4batch/test/general" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="gpt4batch" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="gitlab.com/gpt4batch/test/general" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/test/general/main.go" />
       <method v="2" />
     </configuration>
     <configuration name="Test_client_Chat in gitlab.com/gpt4batch/client" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -106,6 +118,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Go Build.go build gitlab.com/gpt4batch/test/general" />
       <item itemvalue="Go Build.go build gitlab.com/gpt4batch/cmd" />
       <item itemvalue="Go Test.Test_client_Chat in gitlab.com/gpt4batch/client" />
       <item itemvalue="Go Test.Test_client_Upload in gitlab.com/gpt4batch/client" />
@@ -113,6 +126,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build gitlab.com/gpt4batch/cmd" />
+        <item itemvalue="Go Build.go build gitlab.com/gpt4batch/test/general" />
         <item itemvalue="Go Test.Test_client_Upload in gitlab.com/gpt4batch/client" />
         <item itemvalue="Go Test.Test_client_Chat in gitlab.com/gpt4batch/client" />
       </list>

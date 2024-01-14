@@ -265,9 +265,6 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 			HistoryAndTrainingDisabled: s.config.HistoryAndTrainingDisabled,
 		})
 		if err != nil {
-			logger.
-				WithField("pid", ask.ID).
-				Error(err)
 			return err
 		}
 

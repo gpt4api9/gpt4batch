@@ -145,7 +145,7 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 
 			// Tear down the launcher, allowing it a few seconds to finish any
 			// in-progress requests.
-			shutdownCtx, cancel := context.WithTimeout(ctx, 6*time.Minute)
+			shutdownCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
 			defer cancel()
 			return svc.Close(shutdownCtx)
 		},
@@ -155,7 +155,7 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 	rootCmd.Flags().StringVarP(&option.UploadURL, "upload_url", "l", "https://beta.gpt4api.plus/standard/uploaded", "设置批量调用服务地址.普通版：standard 并发版：concurrent")
 	rootCmd.Flags().StringVarP(&option.In, "in", "i", "example.jsonl", "输入文件路径，数据格式按照规定格式定义.")
 	rootCmd.Flags().StringVarP(&option.Out, "out", "o", "out.jsonl", "输出文件路径，GPTs数据跑完存储数据的文件路径.")
-	rootCmd.Flags().IntVarP(&option.Goroutine, "goroutine", "g", 60, "设置最大协程数量.")
+	rootCmd.Flags().IntVarP(&option.Goroutine, "goroutine", "g", 1, "设置最大协程数量.")
 	rootCmd.Flags().BoolVarP(&option.HistoryAndTrainingDisabled, "history_and_training_disabled", "s", true, "是否开启历史对话历史记录，默认是关闭的.")
 	rootCmd.Flags().StringVarP(&option.Model, "model", "m", "gpt-4-gizmo", "设置调用GPTs的模型.")
 	rootCmd.Flags().StringVarP(&option.GizmoId, "gizmo-id", "z", "", "设置GPTs gizmo id的名称.")
