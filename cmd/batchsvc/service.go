@@ -148,6 +148,9 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 	for _, ask := range in.Asks {
 		logger.
 			WithField("pid", ask.ID).
+			WithField("complete", s.stats.GetCompleteTotal()).
+			WithField("success", s.stats.GetSuccessTotal()).
+			WithField("failed", s.stats.GetFailedTotal()).
 			Info()
 
 		// tmpConversationID is the temporary conversation id.
@@ -355,10 +358,7 @@ func (s *service) rdb(ctx context.Context) {
 func (s *service) WithLogger(log gpt4batch.Logger) {
 	s.logger = log.
 		WithField("service", "batchsvc").
-		WithField("total", s.stats.GetBatchTotal()).
-		WithField("complete", s.stats.GetCompleteTotal()).
-		WithField("success", s.stats.GetSuccessTotal()).
-		WithField("failed", s.stats.GetFailedTotal())
+		WithField("total", s.stats.GetBatchTotal())
 }
 
 // write writes the items to the file.
