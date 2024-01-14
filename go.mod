@@ -8,7 +8,6 @@ require (
 	github.com/go-resty/resty/v2 v2.10.0
 	github.com/google/uuid v1.5.0
 	github.com/nsqio/go-nsq v1.1.0
-	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/schollz/progressbar/v3 v3.14.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
