@@ -142,11 +142,9 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 		return errors.New("service canceled")
 	}
 
-	logger := s.logger.
-		WithField("id", in.ID)
-
 	for _, ask := range in.Asks {
-		logger.
+		s.logger.
+			WithField("id", in.ID).
 			WithField("pid", ask.ID).
 			WithField("complete", s.stats.GetCompleteTotal()).
 			WithField("success", s.stats.GetSuccessTotal()).
@@ -184,9 +182,6 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 					UploadType:     gpt4batch.Multimodal,
 				})
 				if err != nil {
-					logger.
-						WithField("pid", ask.ID).
-						Error(err)
 					return err
 				}
 
@@ -223,9 +218,6 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 					UploadType:     gpt4batch.MyFiles,
 				})
 				if err != nil {
-					logger.
-						WithField("pid", ask.ID).
-						Error(err)
 					return err
 				}
 
@@ -285,8 +277,6 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 		in.IErr = nil
 		return nil
 	}
-
-	logger.Error("chat answer is required")
 	return fmt.Errorf("chat answer is required")
 }
 

@@ -19,9 +19,11 @@ package batchsvc
 import (
 	"context"
 	"encoding/json"
-	"gitlab.com/gpt4batch/signals"
 	"net/http"
+	"path/filepath"
 	"time"
+
+	"gitlab.com/gpt4batch/signals"
 
 	"github.com/spf13/cobra"
 	"gitlab.com/gpt4batch"
@@ -47,7 +49,6 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 				WithField("url", option.URL).
 				WithField("model", option.Model).
 				WithField("fix", option.Fix).
-				WithField("qps", option.QPS).
 				WithField("rdb", option.EnableRDB).
 				WithField("gizmo_id", option.GizmoId)
 
@@ -99,7 +100,7 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 				logg.
 					WithField("id", in.ID).
 					WithField("count", batchTotal).
-					Info("Reader")
+					Info(filepath.Base(option.In))
 				return nil
 			}); err != nil {
 				return err
@@ -134,6 +135,11 @@ func NewBatchCommand(ctx context.Context) *cobra.Command {
 			// set the logger for the service.
 			// the logger is used to log the service.
 			svc.WithLogger(logg)
+
+			logg.
+				WithField("in", option.In).
+				WithField("out", option.Out).
+				Info("Prepare")
 
 			// open the service. if the service is failed to open, return an error.
 			// the service is used to send the gpt4api batch to the server.

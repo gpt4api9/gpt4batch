@@ -40,6 +40,8 @@ func (c clientLogger) Upload(ctx context.Context, req *gpt4batch.UploadRequest) 
 	logg := c.logger.
 		WithField("url", req.URL).
 		WithField("filepath", req.UploadPath).
+		WithField("id", req.ID).
+		WithField("pid", req.Pid).
 		WithField("conversation_id", req.ConversationId)
 
 	defer func(start time.Time) {
@@ -62,6 +64,8 @@ func (c clientLogger) Chat(ctx context.Context, req *gpt4batch.ChatRequest) (res
 		WithField("url", req.URL).
 		WithField("model", req.Model).
 		WithField("gizmo_id", req.GizmoId).
+		WithField("id", req.ID).
+		WithField("pid", req.Pid).
 		WithField("conversation_id", req.ConversationID)
 
 	defer func(start time.Time) {
@@ -84,6 +88,8 @@ func (c clientLogger) Chat(ctx context.Context, req *gpt4batch.ChatRequest) (res
 func (c clientLogger) Download(ctx context.Context, req *gpt4batch.DownloadRequest) (err error) {
 	logg := c.logger.
 		WithField("url", req.URL).
+		WithField("id", req.ID).
+		WithField("pid", req.Pid).
 		WithField("localPath", filepath.Join(req.LocalDir, req.LocalFileName))
 
 	defer func(start time.Time) {
