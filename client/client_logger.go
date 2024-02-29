@@ -38,7 +38,7 @@ func (c clientLogger) Close(ctx context.Context) error {
 // Upload uploads a file to the server.
 func (c clientLogger) Upload(ctx context.Context, req *gpt4batch.UploadRequest) (resp *gpt4batch.UploadResponse, err error) {
 	logg := c.logger.
-		WithField("url", req.URL).
+		WithField("url", req.UploadURL).
 		WithField("filepath", req.UploadPath).
 		WithField("id", req.ID).
 		WithField("pid", req.Pid).

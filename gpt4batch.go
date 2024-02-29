@@ -155,10 +155,12 @@ type Parts []*Part
 
 // Part is the part for chat service.
 type Part struct {
+	Name         string `json:"name,omitempty"`
 	AssetPointer string `json:"asset_pointer"`
 	SizeBytes    int    `json:"size_bytes"`
 	Width        int    `json:"width"`
 	Height       int    `json:"height"`
+	MimeType     string `json:"mimeType,omitempty"`
 }
 
 // Attachments is the attachments for chat service.

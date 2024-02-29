@@ -19,11 +19,12 @@ package batchsvc
 import (
 	"bufio"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
+	jsoniter "github.com/json-iterator/go"
 	"net/http"
 	"os"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -55,6 +56,8 @@ type service struct {
 	doneChan <-chan struct{}
 	// wg is the limit go size wg.
 	wg SizedWaitGroup
+	// currentDir is the current dir.
+	currentDir string
 }
 
 // NewService returns a new gpt4batch.Service.
@@ -68,6 +71,7 @@ func NewService(config *Option, cc gpt4batch.Client, items gpt4batch.Ins, stats 
 		rdbInterval: time.Duration(config.RDBInterval) * time.Minute,
 		progressBar: progressbar.Default(int64(len(items))),
 		wg:          New(config.Goroutine),
+		currentDir:  filepath.Dir(config.In),
 	}
 	return svc
 }
@@ -178,7 +182,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 						Dir:         s.config.DownloadDir,        // s.config.DownloadDir is the download dir of the server.
 					},
 					ConversationId: tmpConversationID,
-					UploadPath:     image,
+					UploadPath:     filepath.Join(s.currentDir, image),
 					UploadType:     gpt4batch.Multimodal,
 				})
 				if err != nil {
@@ -188,8 +192,10 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 				// parts is the parts. if the parts is not null, append the parts.
 				// if the parts is null, do nothing.
 				parts = append(parts, &gpt4batch.Part{
+					Name:         resp.Part.Name,
 					AssetPointer: resp.Part.AssetPointer,
 					SizeBytes:    resp.Part.SizeBytes,
+					MimeType:     resp.Part.MimeType,
 					Width:        resp.Part.Width,
 					Height:       resp.Part.Height,
 				})
@@ -214,7 +220,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 						Dir:         s.config.DownloadDir,        // s.config.DownloadDir is the download dir of the server.
 					},
 					ConversationId: tmpConversationID,
-					UploadPath:     file,
+					UploadPath:     filepath.Join(s.currentDir, file),
 					UploadType:     gpt4batch.MyFiles,
 				})
 				if err != nil {
@@ -275,6 +281,14 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 	if len(answers) != 0 {
 		in.Answers = answers
 		in.IErr = nil
+
+		s.logger.
+			WithField("id", in.ID).
+			WithField("complete", s.stats.GetCompleteTotal()).
+			WithField("success", s.stats.GetSuccessTotal()).
+			WithField("failed", s.stats.GetFailedTotal()).
+			Info("OK")
+
 		return nil
 	}
 	return fmt.Errorf("chat answer is required")
@@ -282,6 +296,7 @@ func (s *service) Chat(ctx context.Context, in *gpt4batch.In) error {
 
 // kill the service.
 func (s *service) kill(ctx context.Context) error {
+	time.Sleep(6 * time.Second)
 	// kill the process. wait 4 minutes.
 	pid := os.Getpid()
 	return syscall.Kill(pid, syscall.SIGTERM)
@@ -301,6 +316,8 @@ func (s *service) updateProgressBar(ctx context.Context) {
 			WithField("event", "incr").
 			Info("Done")
 
+		// backup first
+		s.Close(ctx)
 		// kill the service.
 		s.kill(ctx)
 	}
@@ -359,6 +376,11 @@ func (s *service) write(ctx context.Context, filename string) error {
 	}
 	defer file.Close()
 
+	var (
+		success = 0
+		failed  = 0
+	)
+
 	// set batch writing, each batch writes 10000
 	writer := bufio.NewWriter(file)
 	// todo batch size 1000. maybe change in the future.
@@ -367,7 +389,17 @@ func (s *service) write(ctx context.Context, filename string) error {
 	// write the items to the temporary filename.
 	// if the items is null, do nothing.
 	for idx, item := range s.items {
-		jsonStr, err := json.Marshal(item)
+		if item.IErr == nil {
+			success++
+		} else {
+			failed++
+		}
+
+		cfg := jsoniter.Config{
+			EscapeHTML: false,
+		}.Froze()
+
+		jsonStr, err := cfg.Marshal(item)
 		if err != nil {
 			continue
 		}
@@ -400,6 +432,11 @@ func (s *service) write(ctx context.Context, filename string) error {
 		return err
 	}
 
+	s.logger.
+		WithField("OK", success).
+		WithField("Failed", failed).
+		Info("Flush")
+
 	// sync the file.
 	// this operation is important to prevent data loss.
 	return file.Sync()
@@ -415,5 +452,11 @@ func (s *service) Close(ctx context.Context) error {
 			return err
 		}
 	}
-	return s.write(ctx, s.config.Out)
+
+	if err := s.write(ctx, s.config.Out); err != nil {
+		return err
+	}
+
+	s.logger.Info("Write Complete")
+	return nil
 }
