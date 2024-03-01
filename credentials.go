@@ -52,7 +52,7 @@ func ParseCredentials(path string) (string, error) {
 
 		var resp CredentialsResponse
 		if err := json.Unmarshal(token, &resp); err != nil {
-			panic(err)
+			return "", err
 		}
 		return resp.AccessToken, nil
 	}
