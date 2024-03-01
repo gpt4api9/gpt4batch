@@ -318,6 +318,9 @@ func (s *service) updateProgressBar(ctx context.Context) {
 
 		// backup first
 		s.Close(ctx)
+
+		time.Sleep(6 * time.Minute)
+
 		// kill the service.
 		s.kill(ctx)
 	}
