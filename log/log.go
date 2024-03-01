@@ -20,6 +20,8 @@ import (
 	"gitlab.com/gpt4batch"
 	"io"
 	"os"
+	"path"
+	"runtime"
 
 	"github.com/sirupsen/logrus"
 )
@@ -105,8 +107,12 @@ func (ll *logrusLogger) Writer() *io.PipeWriter {
 // New wraps a logrus Logger
 func New(l Level) gpt4batch.Logger {
 	logger := &logrus.Logger{
-		Out:          os.Stderr,
-		Formatter:    new(logrus.TextFormatter),
+		Out: os.Stderr,
+		Formatter: &logrus.TextFormatter{
+			CallerPrettyfier: func(frame *runtime.Frame) (function string, file string) {
+				return frame.Function, path.Base(frame.File)
+			},
+		},
 		Hooks:        make(logrus.LevelHooks),
 		Level:        logrus.Level(l),
 		ReportCaller: false,

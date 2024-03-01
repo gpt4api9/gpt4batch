@@ -105,7 +105,11 @@ func (o *Option) Validate() error {
 	}
 
 	// get credentials from access token filepath.
-	o.AccessToken = gpt4batch.ParseCredentials(o.AccessToken)
+	ak, err := gpt4batch.ParseCredentials(o.AccessToken)
+	if err != nil {
+		return err
+	}
+	o.AccessToken = ak
 
 	if o.EnableDownload {
 		// DownloadDir is null, use the current directory.

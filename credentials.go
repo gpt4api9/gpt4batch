@@ -33,43 +33,43 @@ type CredentialsResponse struct {
 }
 
 // ParseCredentials parses the credentials.
-func ParseCredentials(path string) string {
+func ParseCredentials(path string) (string, error) {
 	if govalidator.IsNull(path) {
 		// Read the token. If the token is empty, panic.
 		homeDir, err := os.UserHomeDir()
 		if err != nil {
-			panic(err)
+			return "", err
 		}
 		homeFilePath := filepath.Join(homeDir, ".gpt4api-sk.pub")
 		token, err := ioutil.ReadFile(homeFilePath)
 		if err != nil {
-			panic(err)
+			return "", err
 		}
 
 		if string(token) == "" {
-			panic(fmt.Sprintf("%s has no token", homeFilePath))
+			return "", fmt.Errorf("%s has no token", homeFilePath)
 		}
 
 		var resp CredentialsResponse
 		if err := json.Unmarshal(token, &resp); err != nil {
 			panic(err)
 		}
-		return resp.AccessToken
+		return resp.AccessToken, nil
 	}
 
 	// Read the token. If the token is empty, panic.
 	token, err := ioutil.ReadFile(path)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	if string(token) == "" {
-		panic(fmt.Sprintf("%s has no token", path))
+		return "", fmt.Errorf("token is required")
 	}
 
 	var resp CredentialsResponse
 	if err := json.Unmarshal(token, &resp); err != nil {
-		panic(err)
+		return "", err
 	}
-	return resp.AccessToken
+	return resp.AccessToken, nil
 }
